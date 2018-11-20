@@ -25,51 +25,51 @@ class App extends Component {
     };
   }
   logout(){
+    let token = 'Token '+localStorage.getItem('userToken');
     console.log('Logout Button Clicked',this.state);
-    // let url = `http://127.0.0.1:8000/api/logout`;
-    localStorage.setItem("userToken",null);
-    this.setState({"usertoken":null})
+    let url = `http://127.0.0.1:8000/api/logout`;
     // this.props.history.push("/");
-    return <Redirect to={{
-      pathname: '/login',
-      state: { from: this.props.location }
-    }}/>
-    //console.log(url);
-    // fetch(url,{
-    //     method: 'POST',
-    //     headers: {'Content-Type':'application/json'},
-    //     body: JSON.stringify({
-    //         "usertoekn": this.state.usertoken,
-    //     })
-    // }).then(response=>response.json())
-    // .then(jsonObj=>{
-    //     if(jsonObj.token){
-    //         this.props.UserToken(jsonObj.token)
-    //         // this.props.UserLogin({
-    //         //     "username": this.state.useremail,
-    //         //     "password": this.state.userpwd
-    //         // })
-    //         console.log("Valid token:",jsonObj.token)
-    //         this.setState({"msg":""})
-    //         localStorage.setItem('userToken', jsonObj.token);
-    //         this.props.history.push("/image");
-    //     }
-    //     else if(jsonObj.error){
-    //         this.setState({"msg":jsonObj.error})
-    //         console.log("Error:",jsonObj.error);
-    //     }else {
-    //         this.setState({"msg":jsonObj})
-    //         console.log(jsonObj);
-    //     }
-    //   });
+    // return <Redirect to={{
+    //   pathname: '/login',
+    //   state: { from: this.props.location }
+    // }}/>
+    console.log(url);
+    fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': token
+        },
+        // body: JSON.stringify({
+        //     "usertoken": this.state.usertoken,
+        // })
+    }).then(response=>response.json())
+    .then(jsonObj=>{
+        if(jsonObj.success){
+            // this.props.UserToken(jsonObj.token)
+            localStorage.setItem("userToken",null);
+            this.setState({"usertoken":null})
+            console.log("Response:",jsonObj.success)
+            // this.props.history.push("/login");
+            return <Redirect to={{
+              pathname: '/login',
+              state: { from: this.props.location }
+            }}/>
+        }
+        else if(jsonObj.detail){
+            console.log("Error:",jsonObj.detail);
+        }else {
+            console.log(jsonObj);
+        }
+      });
     }
   render() {
     return (
       <div className="container">
         <div className="row text-center">
           <div className="jumbotron">
-            <h1>Mike Image Search!</h1>
-            <p>Looking for similar TMs based on Images? Search Here..</p>
+            {/* <h1>Mike Image Search!</h1>
+            <p>Looking for similar TMs based on Images? Search Here..</p> */}
           </div>
           {
           localStorage.getItem("userToken")!==null ? 
@@ -83,7 +83,7 @@ class App extends Component {
             <Switch>
               <Route exact path='/' component={Login} />
               <Route path='/image' component={ImageResult} />
-              <Route path='/' component={Login} />
+              <Route path='/login' component={Login} />
             </Switch>
           </Router>
         </div>

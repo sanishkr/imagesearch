@@ -13,13 +13,14 @@ class ImageSearch extends Component {
         let url = `http://127.0.0.1:8000/api/searchimage`;
         let form = new FormData()
         form.append('image',this.state.newImage)
-        form.append('cropdata',this.state.crop)
+        form.append('cropdata',JSON.stringify(this.state.crop))
         console.log(form);
         fetch(url,{
             method: 'POST',
             headers: {
-            // 'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json',
+            'Content-Disposition': 'form-data',
+            // 'Content-Type': 'multipart/form-data',
             'Authorization': token
             },
             body: form
@@ -41,13 +42,14 @@ class ImageSearch extends Component {
         let url = `http://127.0.0.1:8000/api/searchimage`;
         let form = new FormData()
         form.append('image',event.target.files[0])
-        // form.append('cropdata',this.state.crop)
+        form.append('cropdata',JSON.stringify(this.state.crop))
         console.log(form);
         fetch(url,{
             method: 'POST',
             headers: {
             'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
+            'Content-Disposition': 'form-data',
+            // 'Content-Type': 'multipart/form-data',
             'Authorization': token
             },
             body: form
